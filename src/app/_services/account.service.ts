@@ -8,6 +8,7 @@ import { environment } from '@environments/environment';
 import { Account } from '@app/_models';
 
 const baseUrl = `${environment.apiUrl}/accounts`;
+console.log(baseUrl)
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -48,8 +49,8 @@ export class AccountService {
                 this.accountSubject.next(account);
                 this.startRefreshTokenTimer();
                 return account;
-            }));
-    }
+            }));            
+    }           
 
     register(account: Account) {
         return this.http.post(`${baseUrl}/register`, account);

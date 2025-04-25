@@ -11,7 +11,7 @@ export class AppComponent {
     constructor(private accountService: AccountService) {
         this.accountService.account.subscribe(x => this.account = x);
     }
-
+    
     logout() {
         this.accountService.logout();
     }

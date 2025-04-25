@@ -124,5 +124,8 @@
         }
       }
     }},
-  "defaultProject": "angular-signup-verification-boilerplate"
+  "defaultProject": "angular-signup-verification-boilerplate",
+  "cli": {
+    "analytics": false
+  }
 }
