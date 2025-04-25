@@ -6,7 +6,7 @@ export class Account {
     firstName: string;
     lastName: string;
     email: string;
-    role: Role;
     isActive: boolean
+    role: Role;
     jwtToken?: string;
 }
