@@ -8,15 +8,26 @@ import { Role } from '@app/_models';
 
 // array in local storage for accounts
 
-const accountsKey = 'angular-10-signup-verification-boilerplate-accounts';
+const accountsKey = 'accountsKey';
 let accounts = JSON.parse(localStorage.getItem(accountsKey)) || [];
-console.log(accounts)
+// console.log('accounts: ', accounts)
+
+// for removing the accounts key and value
 // accounts = localStorage.removeItem(accountsKey)
-// console.log(accounts)
+
+
+const departmentKey = 'departments'
+let departments = JSON.parse(localStorage.getItem(departmentKey)) || []
+// console.log('departments: ', departments)
+
+// for removing the accounts key and value
+// departments = localStorage.removeItem(departmentKey)
+
 
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
+
     constructor(private alertService: AlertService) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -44,15 +55,25 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 case url.endsWith('/accounts/reset-password') && method === 'POST':
                     return resetPassword();
                 case url.endsWith('/accounts') && method === 'GET':
-                    return getAccounts();
+                    return getList(accounts, accountsKey)
                 case url.match(/\/accounts\/\d+$/) && method === 'GET':
-                    return getAccountById();
+                    return getById(accounts, accountsKey)
                 case url.endsWith('/accounts') && method === 'POST':
                     return createAccount();
                 case url.match(/\/accounts\/\d+$/) && method === 'PUT':
                     return updateAccount();
                 case url.match(/\/accounts\/\d+$/) && method === 'DELETE':
                     return deleteAccount();
+                // departments
+                case url.endsWith('/departments') && method === 'POST':
+                    return createDepartment();
+                case url.endsWith('/departments') && method === 'GET':
+                    return getList(departments, departmentKey)
+                case url.match(/\/departments\/\d+$/) && method === 'PUT':
+                return updateDepartment();
+                case url.match(/\/departments\/\d+$/) && method === 'GET':
+                // return getDepartmentById();
+                return getById(departments, departmentKey)
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
@@ -94,7 +115,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             localStorage.setItem(accountsKey, JSON.stringify(accounts));
 
             return ok({
-                ...basicDetails(account),
+                // ...basicAccountDetails(account),
+                ...basicDetails(accountsKey, account),
                 jwtToken: generateJwtToken(account)
             });
         }
@@ -114,7 +136,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             localStorage.setItem(accountsKey, JSON.stringify(accounts));
 
             return ok({
-                ...basicDetails(account),
+                // ...basicAccountDetails(account),
+                ...basicDetails(accountsKey, account),
                 jwtToken: generateJwtToken(account)
             });
 
@@ -153,7 +176,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
 
             // assign account id and a few other properties then save
-            account.id = newAccountId();
+            account.id = newId(accounts);
             if (account.id === 1) {
                 // first registered account is an admin
                 account.role = Role.Admin;
@@ -267,22 +290,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return ok();
         }
 
-        function getAccounts() {
+        function getList(list, key){
             if (!isAuthenticated()) return unauthorized();
-            return ok(accounts.map(x => basicDetails(x)));
-        }
-
-        function getAccountById() {
-            if (!isAuthenticated()) return unauthorized();
-
-            let account = accounts.find(x => x.id === idFromUrl());
-
-            // user accounts can get own profile and admin accounts can get all profiles
-            if (account.id !== currentAccount().id && !isAuthorized(Role.Admin)) {
-                return unauthorized();
-            }
-
-            return ok(basicDetails(account));
+            return ok(list.map(x => basicDetails(key, x)));
         }
 
         function createAccount() {
@@ -295,7 +305,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             }
 
             // assign account id and a few other properties then save
-            account.id = newAccountId();
+            account.id = newId(accounts);
             account.dateCreated = new Date().toISOString();
             account.isVerified = true;
             account.refreshTokens = [];
@@ -328,7 +338,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             Object.assign(account, params);
             localStorage.setItem(accountsKey, JSON.stringify(accounts));
 
-            return ok(basicDetails(account));
+            // return ok(basicAccountDetails(account));
+            return ok(basicDetails(accountsKey, account));
         }
 
         function deleteAccount() {
@@ -365,10 +376,15 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 .pipe(materialize(), delay(500), dematerialize());
         }
 
-        function basicDetails(account) {
-            console.log(account)
-            const { id, title, firstName, lastName, email, role, dateCreated, isVerified, isActive } = account;
-            return { id, title, firstName, lastName, email, role, dateCreated, isVerified, isActive };
+        function basicDetails(key, list){
+            if(key === 'accountsKey'){
+                const { id, title, firstName, lastName, email, role, dateCreated, isVerified, isActive } = list;
+                return { id, title, firstName, lastName, email, role, dateCreated, isVerified, isActive };
+            }
+            else if(key === 'departments'){
+                const { id, name, description } = list;
+                return { id, name, description };
+            }
         }
 
         function isAuthenticated() {
@@ -386,8 +402,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return parseInt(urlParts[urlParts.length - 1]);
         }
 
-        function newAccountId() {
-            return accounts.length ? Math.max(...accounts.map(x => x.id)) + 1 : 1;
+        function newId(list) {
+            return list.length ? Math.max(...list.map(x => x.id)) + 1 : 1;
         }
 
         function currentAccount() {
@@ -427,6 +443,51 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         function getRefreshToken() {
             // get refresh token from cookie
             return (document.cookie.split(';').find(x => x.includes('fakeRefreshToken')) || '=').split('=')[1];
+        }
+
+        // department functions
+        function createDepartment(){
+            console.log('fake backend sa department testing')
+            if (!isAuthorized(Role.Admin)) return unauthorized();
+
+            const department = body;
+
+            if(departments.find(x => x.name === department.name)){
+                return error('name already registered. pag pili ug lain bithc')
+            }
+
+            department.id = newId(departments)
+            departments.push(department)
+            localStorage.setItem(departmentKey, JSON.stringify(departments))
+            return ok()
+        }
+
+        function updateDepartment(){
+            if (!isAuthenticated()) return unauthorized();
+            let params = body
+            let department = departments.find(x => x.id === idFromUrl())
+
+            Object.assign(department, params)
+            localStorage.setItem(departmentKey, JSON.stringify(departments))
+            console.log(`updating department`)
+            return ok(basicDetails(departmentKey, department))
+        }
+
+        function getDepartmentById(){
+            console.log('fake backend getDepartmentById')
+            return ok()
+        }
+
+        function getById(listType, key){
+            if (!isAuthenticated()) return unauthorized();
+            
+            let list = listType.find(x => x.id === idFromUrl())
+
+            if (key === 'accountsKey' && list.id !== currentAccount().id && !isAuthorized(Role.Admin)) {
+                return unauthorized();
+            }
+
+            return ok(basicDetails(key, list))
         }
     }
 }

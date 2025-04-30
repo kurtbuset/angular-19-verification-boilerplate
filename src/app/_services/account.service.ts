@@ -75,9 +75,9 @@ export class AccountService {
     getAll() {
         return this.http.get<Account[]>(baseUrl);
     }
-
+    
     getById(id: string) {
-        return this.http.get<Account>(`${baseUrl}/${id}`);
+        return this.http.get<Account>(`${baseUrl}/${id}`)
     }
     
     create(params) {
