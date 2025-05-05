@@ -1,4 +1,5 @@
 ﻿import { Role } from './role';
+import { Employee } from './employee'
 
 export class Account {
     id: string;
@@ -9,4 +10,5 @@ export class Account {
     role: Role;
     isActive: boolean
     jwtToken?: string;
+    employee?: Employee
 }

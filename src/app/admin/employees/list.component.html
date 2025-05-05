@@ -4,25 +4,43 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th style="width:30%">Employee ID</th>
-            <th style="width:30%">Position</th>
-            <th style="width:30%">Hire date</th>
-            <th style="width:10%">Actions</th>
+            <th style="width:5%">ID</th>
+            <th style="width:20%">User</th>
+            <th style="width:20%">Position</th>
+            <th style="width:20%">Department</th>
+            <th style="width:20%">Hire date</th>
+            <th style="width:20%">Status</th>
+            <th style="width:10%">Action 1</th>
+            <th style="width:10%">Action 2</th>
         </tr>
     </thead>
     <tbody>
-        <tr >
-            <td>test employeeId</td>
-            <td>test position</td>
-            <td>test hire date</td>
-            <td style="white-space: nowrap">
-                <a routerLink="" class="btn btn-sm btn-primary mr-1">Edit</a>
-                <!-- <button (click)=")" class="btn btn-sm btn-danger btn-delete-account" [disabled]="account.isDeleting">
-                    <span *ngIf="account.isDeleting" class="spinner-border spinner-border-sm"></span>
-                    <span *ngIf="!account.isDeleting">Delete</span>
-                </button> -->
+        <tr *ngFor="let employee of employees">
+            <td>{{employee.id}}</td>
+            <td>{{employee.account?.email || 'null testing'}}</td>
+            <td>{{employee.position}}</td>
+            <td>{{employee.department?.name || 'No Department'}}</td>
+            <td>{{ employee.hireDate | date:'MM-dd-yyyy' }}</td>
+            <td [class.text-primary]="employee.isActive" [class.text-danger]="!employee.isActive">{{employee.isActive ? 'Active' : 'InActive' }}</td>
+            <td>
+                <div style="display: flex; flex-direction: column; gap: .5em">
+                    <a routerLink="" class="btn btn-sm btn-secondary mr-1">Request</a>
+                    <a routerLink="" class="btn btn-sm btn-success mr-1">Workflows</a>
+                </div>
+            </td>
+            <td>
+                <div style="display: flex; flex-direction: column; gap: .5em; align-items: center">
+                    <a routerLink="edit/{{employee.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+                    <a routerLink="" class="btn btn-sm btn-warning mr-1">Transfer</a>
+                    <button class="btn btn-sm btn-danger btn-delete-account">
+                        <!-- <span class="spinner-border spinner-border-sm"></span> -->
+                        <span>Delete</span>
+                    </button>
+                </div>
             </td>
         </tr>
+
+        
         <!-- <tr *ngIf="!departments">
             <td colspan="4" class="text-center">
                 <span class="spinner-border spinner-border-lg align-center"></span>

@@ -70,10 +70,12 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 case url.endsWith('/departments') && method === 'GET':
                     return getList(departments, departmentKey)
                 case url.match(/\/departments\/\d+$/) && method === 'PUT':
-                return updateDepartment();
+                    return updateDepartment();
                 case url.match(/\/departments\/\d+$/) && method === 'GET':
                 // return getDepartmentById();
-                return getById(departments, departmentKey)
+                    return getById(departments, departmentKey)
+                case url.match(/\/departments\/\d+$/) && method === 'DELETE':
+                    return deleteDepartment();
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
@@ -357,6 +359,18 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             localStorage.setItem(accountsKey, JSON.stringify(accounts));
             return ok();
         }
+
+        function deleteDepartment(){
+            if (!isAuthenticated()) return unauthorized();
+
+            if (!isAuthorized(Role.Admin)) {
+                return unauthorized();
+            }
+
+            departments = departments.filter(x => x.id !== idFromUrl())
+            localStorage.setItem(departmentKey, JSON.stringify(departments))
+            return ok()
+        }
         
         // helper functions
 
@@ -447,7 +461,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         // department functions
         function createDepartment(){
-            console.log('fake backend sa department testing')
             if (!isAuthorized(Role.Admin)) return unauthorized();
 
             const department = body;
@@ -471,11 +484,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             localStorage.setItem(departmentKey, JSON.stringify(departments))
             console.log(`updating department`)
             return ok(basicDetails(departmentKey, department))
-        }
-
-        function getDepartmentById(){
-            console.log('fake backend getDepartmentById')
-            return ok()
         }
 
         function getById(listType, key){

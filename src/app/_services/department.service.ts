@@ -17,9 +17,8 @@ export class DepartmentService{
   public department: Observable<Department>
 
   constructor(
-    private router: Router,
+    // private router: Router,
     private http: HttpClient,
-    private accountService: AccountService
   ){
     this.departmentSubject = new BehaviorSubject<Department>(null)
     this.department = this.departmentSubject.asObservable()
