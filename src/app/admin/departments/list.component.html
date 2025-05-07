@@ -6,7 +6,7 @@
         <tr>
             <th style="width:30%">Name</th>
             <th style="width:30%">Description</th>
-            <th style="width:10%">Employee Count</th>
+            <th style="width:20%">Employee Count</th>
             <th style="width:10%">Actions</th>
         </tr>
     </thead>
@@ -14,7 +14,7 @@
         <tr *ngFor="let department of departments">
             <td>{{department.name}}</td>
             <td>{{department.description}}</td>
-            <td>employee count test</td>
+            <td>{{department.employeeCount}}</td>
             <td style="white-space: nowrap">
                 <a routerLink="edit/{{department.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>
                 <button (click)="deleteDepartment(department.id)" class="btn btn-sm btn-danger btn-delete-account" [disabled]="department.isDeleting">

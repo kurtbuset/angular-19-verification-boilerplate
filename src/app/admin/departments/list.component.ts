@@ -16,7 +16,7 @@ export class ListComponent{
 
   deleteDepartment(id: string){
     const department = this.departments.find(x => x.id === id)
-    department.isDeleting = true
+    department.isDeleting = true  
 
     this.departmentService.delete(id)
       .pipe(first())
