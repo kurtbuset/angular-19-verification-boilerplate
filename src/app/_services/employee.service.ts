@@ -10,9 +10,14 @@ const baseUrl = `${environment.apiUrl}/employees`;
 @Injectable({ providedIn: 'root'})
 export class EmployeeService{
   private employeeSubject: BehaviorSubject<Employee>
-  public department: Observable<Employee>
+  public employee: Observable<Employee>
   
-  constructor(private http: HttpClient){ }
+  constructor(
+    private http: HttpClient
+  ){ 
+    this.employeeSubject = new BehaviorSubject<Employee>(null)
+    this.employee = this.employeeSubject.asObservable()
+  }
 
   public get employeeValue(): Employee {
     return this.employeeSubject.value
@@ -28,5 +33,18 @@ export class EmployeeService{
 
   getById(id: string){
     return this.http.get<Employee>(`${baseUrl}/${id}`)
+  }
+
+  update(id, params){
+    return this.http.put(`${baseUrl}/${id}`, params)
+      .pipe(map((employee: any) => {
+        console.log(employee)
+        this.employeeSubject.next(employee) 
+        return employee
+      }))
+  }
+
+  delete(id){
+    return this.http.delete(`${baseUrl}/${id}`)
   }
 }

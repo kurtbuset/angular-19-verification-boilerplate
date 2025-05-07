@@ -32,19 +32,19 @@
                 <div style="display: flex; flex-direction: column; gap: .5em; align-items: center">
                     <a routerLink="edit/{{employee.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>
                     <a routerLink="" class="btn btn-sm btn-warning mr-1">Transfer</a>
-                    <button class="btn btn-sm btn-danger btn-delete-account">
-                        <!-- <span class="spinner-border spinner-border-sm"></span> -->
-                        <span>Delete</span>
+                    <button (click)="deleteEmployee(employee.id)" class="btn btn-sm btn-danger btn-delete-account" [disabled]="employee.isDeleting">
+                        <span *ngIf="employee.isDeleting" class="spinner-border spinner-border-sm"></span>
+                        <span *ngIf="!employee.isDeleting">Delete</span>
                     </button>
                 </div>
             </td>
         </tr>
 
         
-        <!-- <tr *ngIf="!departments">
+        <tr *ngIf="!employees">
             <td colspan="4" class="text-center">
                 <span class="spinner-border spinner-border-lg align-center"></span>
             </td>
-        </tr> -->
+        </tr>
     </tbody>
 </table>

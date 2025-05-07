@@ -63,11 +63,11 @@ export class AddEditComponent {
             .subscribe((data) => {
               const filtered = data.filter((account) => account.role === 'User' && account.isActive && !account.employee)
               
-              console.log(x.userId)
+              // console.log(x.userId)
               const current = data.find(account => account.id === x.userId)
-              console.log(current)
+              // console.log(current)
               const alreadyIncluded = filtered.some(account => account.id === x.userId)
-              console.log(alreadyIncluded)
+              // console.log(alreadyIncluded)
 
               if(current && !alreadyIncluded){
                 filtered.push(current)
@@ -85,8 +85,6 @@ export class AddEditComponent {
           this.accounts = data.filter((account) => account.role === 'User' && account.isActive && !account.employee)
       })
     }
-
-    
   } 
   
 
@@ -94,7 +92,6 @@ export class AddEditComponent {
     return this.form.controls;
   }
 
-  
 
   onSubmit() {
     this.submitted = true;
@@ -130,5 +127,20 @@ export class AddEditComponent {
       });
   }
 
-  editAccount() {}
+  editAccount() {
+    this.employeeService
+      .update(this.id, this.form.value)
+      .pipe(first())
+      .subscribe({
+        next: () => {
+          this.alertService.success('Updated successful', { keepAfterRouteChange: true })
+          this.router.navigate(['/admin/employees'])
+        },
+        error: error => { 
+          console.log('error brad')
+          this.alertService.error(error)
+          this.loading = false
+        }
+      })
+  }
 }

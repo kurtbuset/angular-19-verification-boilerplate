@@ -8,7 +8,7 @@ export class ListComponent{
   employees: any[]
  
   constructor(
-    private employeeService: EmployeeService,
+    private employeeService: EmployeeService
   ){ }
 
   ngOnInit(){
@@ -17,6 +17,18 @@ export class ListComponent{
       .subscribe(employee => {
         // console.log(employee) 
         this.employees = employee
+      })
+  }
+
+  deleteEmployee(id: string){
+    const employee = this.employees.find(x => x.id === id)
+    console.log(employee)
+    employee.isDeleting = true
+
+    this.employeeService.delete(id)
+      .pipe(first())
+      .subscribe(() => {
+        this.employees = this.employees.filter(x => x.id !== id)
       })
   }
 } 
