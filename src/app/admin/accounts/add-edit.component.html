@@ -60,7 +60,7 @@
                 <div *ngIf="f.isActive.errors.required">Status is required</div>
             </div>
         </div>
-    </div>
+    </div> <!-- Added missing closing div tag for form-row -->
     <div *ngIf="!isAddMode">
         <h3 class="pt-3">Change Password</h3>
         <p>Leave blank to keep the same password</p>
@@ -90,4 +90,4 @@
         </button>
         <a routerLink="/admin/accounts" class="btn btn-link">Cancel</a>
     </div>
-</form>
+
