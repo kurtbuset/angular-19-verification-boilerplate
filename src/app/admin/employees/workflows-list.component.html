@@ -1,0 +1,31 @@
+<h1>Workflows for Employee Testing</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width:30%">Type</th>
+            <th style="width:30%">Details</th>
+            <th style="width:20%">Status</th>
+            <!-- only admin can access this -->
+            <th style="width:10%">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>test</td>
+            <td>test</td>
+            <td>test</td>
+            <td style="white-space: nowrap">
+                <a routerLink="" class="btn btn-sm btn-primary mr-1">Edit</a>
+                <!-- <button (click)="" class="btn btn-sm btn-danger btn-delete-account" [disabled]="department.isDeleting">
+                    <span *ngIf="department.isDeleting" class="spinner-border spinner-border-sm"></span>
+                    <span *ngIf="!department.isDeleting">Delete</span>  
+                </button> -->
+            </td>
+        </tr>
+        <tr *ngIf="!departments">
+            <td colspan="4" class="text-center">
+                <span class="spinner-border spinner-border-lg align-center"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>

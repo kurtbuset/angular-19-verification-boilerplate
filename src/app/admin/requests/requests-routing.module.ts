@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ListComponent } from './list.component';
-
+import { UpdateComponent } from './update.component'
 
 const routes: Routes = [
     { path: '', component: ListComponent },
-    // { path: 'add', component: AddEditComponent },
-    // { path: 'edit/:id', component: AddEditComponent }
+    { path: 'update', component: UpdateComponent }
 ];
 
 @NgModule({

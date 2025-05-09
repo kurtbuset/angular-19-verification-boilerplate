@@ -1,0 +1,73 @@
+<h1>Add Request</h1>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-row">
+    <!-- type -->
+    <div class="form-group col">
+      <label>Type</label>
+      <select name="type" id="type" class="form-control">
+        <option value="">-- Select --</option>
+        <option value="equipment" selected>Equipment</option>
+        <option value="resources">Resources</option>
+        <!-- <option value="leave">Leave</option> -->
+      </select>
+    </div>
+  </div>
+
+  <br>
+
+  <!-- equipment and resources -->
+   <!-- only appear when equipment or resources is selected -->
+  <div>
+    <strong>Items</strong>
+    <div class="form-row">
+      <div class="form-group col-6">
+        <label>Name</label>
+        <input type="text" id="name" class="form-control" formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+      </div>
+      </div>
+      <div class="form-group col-6">
+        <label>Quantity</label>
+        <input type="number" id="quantity" class="form-control" formControlName="quantity" [ngClass]="{ 'is-invalid': submitted && f.quantity.errors }">
+        <div *ngIf="submitted && f.quantity.errors" class="invalid-feedback">
+          <div *ngIf="f.quantity.errors.required">Quantity is required</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th style="width: 30%;">Name</th>
+            <th style="width: 10%;">Quantity</th>
+            <th style="width: 10%;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>balo lng</td>
+            <td>1</td>
+            <td style="white-space: nowrap;">
+              <button class="btn btn-sm btn-danger btn-delete-account" [disabled]="">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+                <span>Delete</span>  
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <div class="form-group">
+    <button [disabled]="loading" class="btn btn-primary">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Save
+    </button>
+    <a routerLink="/request" class="btn btn-link">Cancel</a>
+  </div>
+</form>

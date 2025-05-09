@@ -7,7 +7,7 @@
     <div class="form-group col-6">
       <label>User</label>
       <select formControlName="userId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.userId.errors }">
-        <option value=""></option>
+        <option value="">-- Select --</option>
         <option *ngFor="let account of accounts" [value]="account.id">{{account.email}}</option>
       </select>
         <div *ngIf="submitted && f.userId.errors" class="invalid-feedback">

@@ -3,6 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RequestsRoutingModule } from './requests-routing.module';
 import { ListComponent } from './list.component';
+import { UpdateComponent } from './update.component';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import { ListComponent } from './list.component';
         RequestsRoutingModule
     ],
     declarations: [
-        ListComponent
+        ListComponent,
+        UpdateComponent
     ]
 })
 export class RequestsModule { }
