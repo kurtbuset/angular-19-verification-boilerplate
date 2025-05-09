@@ -23,7 +23,7 @@ import { HomeComponent } from './home';
     declarations: [
         AppComponent,
         AlertComponent,
-        HomeComponent       
+        HomeComponent
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AccountService] },
@@ -31,8 +31,8 @@ import { HomeComponent } from './home';
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
         // provider used to create fake backend
-        // fakeBackendProvider
+        fakeBackendProvider
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule { }  
+export class AppModule { }

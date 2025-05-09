@@ -11,7 +11,7 @@ export class RegisterComponent implements OnInit {
     form: UntypedFormGroup;
     loading = false;
     submitted = false;
-    
+
     constructor(
         private formBuilder: UntypedFormBuilder,
         private route: ActivatedRoute,
@@ -47,20 +47,20 @@ export class RegisterComponent implements OnInit {
         if (this.form.invalid) {
             return;
         }
-            
+        
         this.loading = true;
         this.accountService.register(this.form.value)
             .pipe(first())
             .subscribe({
                 next: () => {
-                    console.log('success')
                     this.alertService.success('Registration successful, please check your email for verification instructions', { keepAfterRouteChange: true });
                     this.router.navigate(['../login'], { relativeTo: this.route });
                 },
                 error: error => {
-                    this.alertService.error(error);
+                    console.error('Registration error:', error);
+                    this.alertService.error(error || 'Registration failed. Please try again.');
                     this.loading = false;
                 }
             });
     }
-}   
+}
